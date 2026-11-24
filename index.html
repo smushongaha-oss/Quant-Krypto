@@ -1102,15 +1102,16 @@ function buildSelect(){
   let html='';
   if(!items.length){
     html=DEF.map(s=>'<option value="'+s[0]+'">'+esc(s[1].toUpperCase())+'</option>').join('');
-    if(!DEF.some(s=>s[0]===cfg.sym))html='<option value="'+esc(cfg.sym)+'">'+esc(nameFor(cfg.sym).toUpperCase())+'</option>'+html;
+    if(!DEF.some(s=>s[0]===cfg.sym)&&!isBN(cfg.sym))html='<option value="'+esc(cfg.sym)+'">'+esc(nameFor(cfg.sym).toUpperCase())+'</option>'+html;
   }else{
     for(const g of ['FOREX','COMM','IDX','CRYPTO','SYNTH','OTHER']){
       const l=items.filter(x=>x.grp===g).sort((a,b)=>a.name.localeCompare(b.name));
       if(!l.length)continue;
       html+='<optgroup label="'+GN[g]+'">'+l.map(x=>'<option value="'+esc(x.sy)+'">'+esc(x.name.toUpperCase())+(x.open?'':' (CLOSED)')+'</option>').join('')+'</optgroup>';
     }
-    if(!S.cat[cfg.sym])html='<option value="'+esc(cfg.sym)+'">'+esc(nameFor(cfg.sym).toUpperCase())+'</option>'+html;
+    if(!S.cat[cfg.sym]&&!isBN(cfg.sym))html='<option value="'+esc(cfg.sym)+'">'+esc(nameFor(cfg.sym).toUpperCase())+'</option>'+html;
   }
+  if(BN.length)html+='<optgroup label="BINANCE (SIGNALS ONLY)">'+BN.map(sy=>'<option value="'+esc(sy)+'">'+esc(nameFor(sy).toUpperCase())+'</option>').join('')+'</optgroup>';
   if(sel._h!==html){sel.innerHTML=html;sel._h=html;}
   sel.value=cfg.sym;
 }
